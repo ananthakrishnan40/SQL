@@ -1,0 +1,81 @@
+create database schoolDB;
+use schoolDB;
+--  2.Create a students , customer, staff, Product ,user table do all ddl & dml opearation (each table min 5 columns)
+
+create table students(id int auto_increment primary key,name varchar(30),course varchar(10),year int);
+desc students;
+
+insert into students(name,course,year) values('AnanthaKrishnan s kumar','MCA',2);
+insert into students(name,course,year) values('Gokul','Animation',2),('Noble','MCA',1);
+insert into students(name,course,year) values('Abhiram','CSE',4);
+insert into students(name,course,year) values('Sreekuttan','Tool',2);
+
+update students set course = 'Tool and Die' where name = 'Sreekuttan';
+
+alter table students modify column course varchar(20);
+desc students;
+
+delete from students;
+select * from students;
+truncate students;
+delete from students where id = 2;
+
+
+-- staff table ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-- 
+
+
+create table customer(id int auto_increment primary key,name varchar(30),email varchar(40), age int, location varchar(20)); 
+alter table customer add column salary int;
+
+select * from customer;
+rename table customer to employee;
+rename table employee to staff;
+
+insert into employee(name,email,age,location,salary) values('AnanthaKrishnan s kumar','Ak@gmail.com',23,'Kerala',900000);
+insert into employee(name,email,age,location,salary) values('Jaya Shankar','js@gmail.com',21,'TamilNadu',85000);
+insert into employee(name,email,age,location,salary) values('Noble Unni','n@gmail.com',25,'Kerala',50000);
+insert into employee(name,email,age,location,salary) values('Arun a Nair','aa@gmail.com',23,'Kerala',49000);
+insert into employee(name,email,age,location,salary) values('Jothis JS','js@gmail.com',23,'TamilNadu',100000);
+insert into employee(name,email,age,location,salary) values('Pranev Mohan','pranevm@gmail.com',23,'Kerala',100000);
+insert into employee(name,email,age,location,salary) values('Gokul Krishnan','gk@gmail.com',24,'Kerala',100000);
+
+select * from staff;
+select * from staff where location = 'TamilNadu';
+
+-- customer table ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+create table customer(id int auto_increment primary key, name varchar(30), Pid int, location varchar(20));
+desc customer;
+
+insert into customer(name,Pid,location) values('Raja Ram',1,'Ramapuram');
+insert into customer(name,Pid,location) values('vishal V', 2, 'Ramapuram');
+insert into customer(name,Pid,location) values('Kasthuri', 2, 'ECR');
+insert into customer(name,Pid,location) values('Manish Sing', 5, 'vellachari');
+insert into customer(name,Pid,location) values('AnanthaKrishnan', 5, 'vellachari');
+insert into customer(name,Pid,location) values('Arun A', 10, 'ECR');
+
+select * from customer;
+
+-- product ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+create table product(id int auto_increment primary key, name varchar(30), price int, stock int);
+desc product;
+
+insert into product(name, price, stock) values('Brush',10,100);
+insert into product(name, price, stock) values('Jam',25,2);
+insert into product(name, price, stock) values('Bread',60,4);
+insert into product(name, price, stock) values('pen',10,300);
+insert into product(name, Price, stock) values('pencle', 50, 100);
+insert into product(name, price, stock) values('chocolate',1,1000);
+
+select * from product;
+
+select name , price * stock as value from product;
+select * from product where stock<50;
+select * from product where stock>100;
+
+select name , price * 100 as Restock_cost from product;
+select name , price * 50 as Restock_cost from product where stock<100;
+
+
+-- Drop table //////////////////////////////////////////////////////////////////////////////////////
+
+drop table students;
