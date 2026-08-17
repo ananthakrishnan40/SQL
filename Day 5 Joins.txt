@@ -1,0 +1,151 @@
+CREATE TABLE departments (dept_id INT,dept_name VARCHAR(50));
+
+CREATE TABLE employees (emp_id INT,emp_name VARCHAR(50),dept_id INT,manager_id INT,salary INT);
+
+CREATE TABLE projects (project_id INT,project_name VARCHAR(50),dept_id INT);
+
+CREATE TABLE emp_projects (emp_id INT,project_id INT);
+
+CREATE TABLE locations (location_id INT,dept_id INT,city VARCHAR(50));
+
+INSERT INTO departments VALUES(1, 'IT'),(2, 'HR'),(3, 'Finance'),(4, 'Sales');
+
+INSERT INTO employees VALUES(1, 'Alice', 1, NULL, 80000),(2, 'Bob', 1, 1, 60000),(3, 'Charlie', 2, 1, 50000),(4, 'David', 3, 2, 70000),(5, 'Eva', NULL, 2, 45000);
+
+INSERT INTO projects VALUES(101, 'Website', 1),(102, 'Payroll', 3),(103, 'Recruitment', 2);
+
+INSERT INTO emp_projects VALUES(1, 101),(2, 101),(3, 103),(4, 102);
+
+INSERT INTO locations VALUES(1, 1, 'New York'),(2, 2, 'London'),(3, 3, 'Tokyo');
+
+
+
+-- 1.Get employee names with their department names.
+select * from employees;   -- dept_id
+select * from departments;   -- dept_id
+select e.emp_name , d.dept_name from departments d join employees e on d.dept_id = e.dept_id;
+
+
+-- 2.Get all employees including those without departments.
+select e.emp_name , d.dept_name from employees e left join departments d on e.dept_id = d.dept_id;
+
+-- 3.Get all departments even if no employees exist.
+select d.dept_name , e.emp_name from employees e right join departments d on e.dept_id = d.dept_id;
+
+-- 4.Find employees working on projects.
+select * from projects;
+select * from employees;
+select e.emp_id,e.emp_name,p.project_id,p.project_name,p.dept_id from employees e right join projects p on e.dept_id = p.dept_id;
+
+
+-- 5.Find employees NOT assigned to any project.
+
+select * from employees e left join projects p on e.dept_id = p.dept_id where p.project_id is null;
+
+-- 6.List projects with department name.
+select p.project_name, d.dept_name from projects p join departments d on p.dept_id = d.dept_id;
+select * from departments;
+
+-- 7.Get employee names with department and city.
+select * from employees;
+select * from departments;
+select * from locations;
+select e.emp_name as Name, d.dept_name as Department ,l.city  from employees e join departments d on e.dept_id=d.dept_id join locations l on d.dept_id = l.dept_id ; 
+
+-- 8.Get employees and their manager names (SELF JOIN).
+select * from employees;
+select e.emp_name , m.emp_name from employees e join employees m on e.manager_id = m.emp_id;
+
+
+-- 9.Find departments with no projects.
+select * from departments;
+select * from projects;
+select * from departments d left join projects p on d.dept_id = p.dept_id where p.project_id is Null;
+
+
+-- 10.Get employees earning more than their manager.
+select * from employees;
+
+select m.emp_name as Manager_Name , m.salary as Manager_Salary 
+from employees m
+join
+ employees e on 
+ e.emp_id = m.manager_id
+ where m.salary>e.salary;
+
+-- 11.Show department-wise employee count.
+select * from employees;
+select * from departments;
+
+select d.dept_name,count(e.emp_id) as Employee_count from departments d left join employees e on e.dept_id = d.dept_id group by d.dept_name;
+
+-- 12.List employees with no department.
+select * from employees where dept_id is Null;
+
+-- 13.Get project count per department.
+select * from projects;
+select * from departments;
+select d.dept_name,count(p.project_id) as project_count from departments d left join projects p on d.dept_id = p.dept_id group by d.dept_name;
+
+-- 14.Find employees working in IT department.
+select d.dept_name,count(e.emp_id)from departments d left join employees e on e.dept_id = d.dept_id where dept_name = 'IT' group by(d.dept_name);
+
+-- 15.Get employees with their project names (if any).
+select * from employees;
+select * from departments;
+select * from projects;
+
+select e.emp_name as employee_name,p.project_name as project_name from projects p inner join departments d on d.dept_id = p.dept_id inner join employees e on e.dept_id = d.dept_id;
+
+-- 16.Get departments and their locations.
+select * from locations;
+select * from departments;
+
+select d.dept_name , l.city from departments d left join locations l on d.dept_id = l.dept_id;
+
+
+-- 17.Find employees working in Tokyo.
+
+select e.emp_name,l.city from locations l left join employees e on l.dept_id = e.dept_id where l.city = 'Tokyo';
+
+-- 18.Show project name with employee count.
+
+select p.project_name, count(e.emp_id) from projects p left join employees e on e.dept_id = p.dept_id group by p.project_name;
+
+-- 19.Find departments having more than 1 employee.
+select d.dept_name, count(e.emp_id) from departments d left join employees e on e.dept_id = d.dept_id group by d.dept_name having count(e.emp_id)>1;
+
+-- 20.Get employees and their department & project.
+select e.emp_name,d.dept_name,p.project_name from employees e left join projects p on p.dept_id = e.dept_id left join departments d on e.dept_id = d.dept_id;
+
+-- 21.Find employees without managers.
+select * from employees e where e.manager_id is null;
+
+-- 22.Get all possible employee–project combinations (CROSS JOIN).
+
+select e.emp_name , p.project_name from employees e cross join projects p;
+
+
+-- 23.Find employees who work in same department as Alice.
+
+select * from employees l where l.dept_id = (select e.dept_id from employees e where e.emp_name = 'Alice');
+
+-- 24.FULL OUTER JOIN (Departments & Employees) – MySQL way.
+
+select * from employees e left join departments d on e.dept_id = d.dept_id 
+union
+select * from employees e right join departments d on e.dept_id = d.dept_id;
+
+
+
+
+-- 25.Find departments with employees but no location.
+
+select * from departments;
+select * from employees;
+select * from locations;
+
+select d.dept_name as department_name,count(e.emp_id) as employee_count, l.city as city from departments d left join employees e on e.dept_id = d.dept_id left join locations l on l.dept_id = d.dept_id group by d.dept_name,l.city having count(e.emp_id)>0;
+
+select d.dept_name as department_name,count(e.emp_id) as employee_count, l.city as city from departments d left join employees e on e.dept_id = d.dept_id left join locations l on l.dept_id = d.dept_id group by d.dept_name,l.city having count(e.emp_id)>0 and city is null;
+
