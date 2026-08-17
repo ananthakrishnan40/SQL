@@ -1,0 +1,17 @@
+create table order_(id int auto_increment primary key,product_name varchar(20), quantity int , price int);
+select * from order_;
+insert into order_ (product_name,quantity,price) values('cake',20,100);
+insert into order_ (product_name,quantity,price) values('apple',1,20);
+insert into order_ (product_name,quantity,price) values('orange',100,60);
+insert into order_ (product_name,quantity,price) values('Pepsi',9,40);
+insert into order_ (product_name,quantity,price) values('frooti',22,35);
+insert into order_ (product_name,quantity,price) values('ArrowRoot',4,300);
+
+-- 3. Select all orders where quantity > 2.
+select * from order_ where quantity > 2;
+
+-- 4. Select orders where price is between 100 and 500.
+select * from order_ where price>=100 and price<=500;
+
+-- 5. Fetch orders with product_name starting with 'A'.
+select product_name from order_ where product_name like 'A%'; 
